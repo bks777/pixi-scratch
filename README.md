@@ -3,4 +3,4 @@
 Solution of scratch mechanizm
 ES5 + HTML5 Canvas
 
-Demo is here:
+Demo is here: https://bks777.github.io/pixi-scratch/
