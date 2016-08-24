@@ -1,0 +1,19 @@
+{
+  "name": "pixi-scratch",
+  "homepage": "https://github.com/bks777/pixi-scratch",
+  "authors": [
+    "Kostiantyn Bokov <kastianchiik@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "pixi.js": "^4.0.0"
+  }
+}
