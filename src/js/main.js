@@ -6,17 +6,29 @@ function App(){
     this.CONFIG = {
         images: [
             {
-                name: 'back',
-                path: 'res/1.jpg'
+                name: 'cell',
+                path: 'res/cell.png'
             }
         ],
         stageDimensions: {
             width: 640,
-            height: 480
+            height: 640
         },
         randomRect: {
-            min: -30,
-            max: 30
+            min: -50,
+            max: 50
+        },
+        baseRect: {
+            width: 30,
+            height: 30
+        },
+        scratchArea: {
+            columns: 3,
+            rows: 3,
+            cellWidth: 200,
+            cellHeight: 200,
+            offset: 20,
+            textureName: 'cell'
         }
     };
     this.startRender();
@@ -74,8 +86,24 @@ App.prototype.addLayers = function (textures) {
             this.CONFIG.stageDimensions.width,
             this.CONFIG.stageDimensions.height
         ),
-        backLayer = new PIXI.Sprite(textures['back']),
-        upperLayer = new PIXI.Sprite();
+        backLayer = new PIXI.Container(),
+        upperLayer = new PIXI.Sprite(),
+        columnId,
+        rowId,
+        tempSprite;
+    //Adding of scratch boxes
+    for (columnId = 0; columnId < this.CONFIG.scratchArea.columns; columnId++){
+        for(rowId = 0; rowId < this.CONFIG.scratchArea.rows; rowId++){
+            tempSprite = new PIXI.Sprite(textures[this.CONFIG.scratchArea.textureName]);//Here we can take random texture
+            tempSprite.width = this.CONFIG.scratchArea.cellWidth;
+            tempSprite.height = this.CONFIG.scratchArea.cellHeight;
+            tempSprite.position = new PIXI.Point(
+                (columnId * this.CONFIG.scratchArea.cellWidth) + (columnId * this.CONFIG.scratchArea.offset),
+                (rowId *  this.CONFIG.scratchArea.cellHeight) + (rowId * this.CONFIG.scratchArea.offset)
+            );
+            backLayer.addChild(tempSprite);
+        }
+    }
 
     upperGraphics.ctx.fillStyle = '#cccccc';
     upperGraphics.ctx.fillRect(
@@ -112,6 +140,13 @@ App.prototype.setUserActions = function () {
         if (!me.isMouseDown){
             return;
         }
+        //erasing of base block
+        me.gfx.ctx.clearRect(
+            mouseData.data.global.x,
+            mouseData.data.global.y,
+            me.CONFIG.baseRect.width,
+            me.CONFIG.baseRect.height
+        );
         //erasing of random block
         me.gfx.ctx.clearRect(
             mouseData.data.global.x,
