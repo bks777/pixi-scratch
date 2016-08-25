@@ -1,8 +1,15 @@
+/**
+ * Application
+ * @constructor
+ */
 function App(){
     this.startRender();
     this.loadImages();
 }
 
+/**
+ * PIXI loader for images
+ */
 App.prototype.loadImages = function () {
     var me = this,
         images = [];
@@ -20,6 +27,9 @@ App.prototype.loadImages = function () {
     this.loader.load();
 };
 
+/**
+ * Creating of a ticker and starting tick
+ */
 App.prototype.startRender = function () {
     this.ticker = new PIXI.ticker.Ticker();
     var renderer = PIXI.autoDetectRenderer(640, 480, {antialias: true, resolution: 1}),
@@ -32,6 +42,10 @@ App.prototype.startRender = function () {
     this.ticker.start();
 };
 
+/**
+ * Adding Images to stage
+ * @param textures {Object} PIXI Texture
+ */
 App.prototype.addLayers = function (textures) {
     var upperGraphics = this.getCanvas(640, 480),
         backLayer = new PIXI.Sprite(textures['back']),
@@ -50,6 +64,10 @@ App.prototype.addLayers = function (textures) {
     this.stage.addChild(upperLayer);
 };
 
+/**
+ * Setting of listeners and their logic.
+ * Dragging logic.
+ */
 App.prototype.setUserActions = function () {
     this.stage.interactive = true;
     var me = this;
@@ -63,17 +81,23 @@ App.prototype.setUserActions = function () {
         if (!me.isMouseDown){
             return;
         }
+        //erasing of random block
         me.gfx.ctx.clearRect(
             mouseData.data.global.x,
             mouseData.data.global.y,
             me.getRandomNumber(-50, 50),
             me.getRandomNumber(-50, 50)
         );
-        me.layer.texture = PIXI.Texture.fromCanvas(me.gfx.canvas);
-        me.gfx.canvas._pixiId = undefined; //TODO need to optimize!
+        me.layer.texture.update();
     }
 };
 
+/**
+ * Creating a new HTML5 Canvas
+ * @param width {Number}
+ * @param height {Number}
+ * @returns {{canvas: Element, ctx: (CanvasRenderingContext2D|*)}}
+ */
 App.prototype.getCanvas = function (width, height) {
     var canavs = document.createElement("canvas"),
         ctx;
@@ -86,8 +110,15 @@ App.prototype.getCanvas = function (width, height) {
     }
 };
 
+/**
+ * Creating of random number
+ * @param min {Number} from
+ * @param max {Number} to
+ * @returns {*}
+ */
 App.prototype.getRandomNumber = function(min, max){
     return Math.floor(Math.random() * (max - min)) + min;
 };
 
+//Creates an instance of scratch mechanism class
 var scratch = new App();
