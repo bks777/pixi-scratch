@@ -3,6 +3,22 @@
  * @constructor
  */
 function App(){
+    this.CONFIG = {
+        images: [
+            {
+                name: 'back',
+                path: 'res/1.jpg'
+            }
+        ],
+        stageDimensions: {
+            width: 640,
+            height: 480
+        },
+        randomRect: {
+            min: -30,
+            max: 30
+        }
+    };
     this.startRender();
     this.loadImages();
 }
@@ -15,7 +31,10 @@ App.prototype.loadImages = function () {
         images = [];
 
     this.loader = PIXI.loader;
-    this.loader.add('back', 'res/1.jpg');
+    this.CONFIG.images.forEach(function (element) {
+        me.loader.add(element.name, element.path);
+    });
+
     this.loader.once('complete', function (loader, res) {
         for (var image in res){
             images[image] = new PIXI.Texture(
@@ -32,7 +51,11 @@ App.prototype.loadImages = function () {
  */
 App.prototype.startRender = function () {
     this.ticker = new PIXI.ticker.Ticker();
-    var renderer = PIXI.autoDetectRenderer(640, 480, {antialias: true, resolution: 1}),
+    var renderer = PIXI.autoDetectRenderer(
+            this.CONFIG.stageDimensions.width,
+            this.CONFIG.stageDimensions.height,
+            {antialias: true, resolution: 1}
+        ),
         stage = new PIXI.Container();
     document.getElementById('container').appendChild(renderer.view);
     this.stage = stage;
@@ -47,12 +70,20 @@ App.prototype.startRender = function () {
  * @param textures {Object} PIXI Texture
  */
 App.prototype.addLayers = function (textures) {
-    var upperGraphics = this.getCanvas(640, 480),
+    var upperGraphics = this.getCanvas(
+            this.CONFIG.stageDimensions.width,
+            this.CONFIG.stageDimensions.height
+        ),
         backLayer = new PIXI.Sprite(textures['back']),
         upperLayer = new PIXI.Sprite();
 
     upperGraphics.ctx.fillStyle = '#cccccc';
-    upperGraphics.ctx.fillRect(0,0,640,480);
+    upperGraphics.ctx.fillRect(
+        0,
+        0,
+        this.CONFIG.stageDimensions.width,
+        this.CONFIG.stageDimensions.height
+    );
     this.gfx = upperGraphics;
 
     upperLayer.texture = PIXI.Texture.fromCanvas(upperGraphics.canvas);
@@ -85,8 +116,8 @@ App.prototype.setUserActions = function () {
         me.gfx.ctx.clearRect(
             mouseData.data.global.x,
             mouseData.data.global.y,
-            me.getRandomNumber(-50, 50),
-            me.getRandomNumber(-50, 50)
+            me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max),
+            me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max)
         );
         me.layer.texture.update();
     }
