@@ -15,12 +15,12 @@ function App(){
             height: 640
         },
         randomRect: {
-            min: -50,
-            max: 50
+            min: -30,
+            max: 30
         },
         baseRect: {
-            width: 30,
-            height: 30
+            width: 25,
+            height: 25
         },
         scratchArea: {
             columns: 3,
@@ -106,7 +106,7 @@ App.prototype.addLayers = function (textures) {
     for (columnId = 0; columnId < this.CONFIG.scratchArea.columns; columnId++){
         for(rowId = 0; rowId < this.CONFIG.scratchArea.rows; rowId++){
             tempX =  (columnId * this.CONFIG.scratchArea.cellWidth) + (columnId * this.CONFIG.scratchArea.offset);
-            tempY = (rowId *  this.CONFIG.scratchArea.cellHeight) + (rowId * this.CONFIG.scratchArea.offset)
+            tempY = (rowId *  this.CONFIG.scratchArea.cellHeight) + (rowId * this.CONFIG.scratchArea.offset);
             tempSprite = new PIXI.Sprite(textures[this.CONFIG.scratchArea.textureName]);//Here we can take random texture
             tempSprite.width = this.CONFIG.scratchArea.cellWidth;
             tempSprite.height = this.CONFIG.scratchArea.cellHeight;
@@ -152,8 +152,8 @@ App.prototype.setUserActions = function () {
         }
         //erasing of base block
         me.gfx.ctx.clearRect(
-            mouseData.data.global.x,
-            mouseData.data.global.y,
+            mouseData.data.global.x - me.CONFIG.baseRect.width / 2,
+            mouseData.data.global.y - me.CONFIG.baseRect.height / 2,
             me.CONFIG.baseRect.width,
             me.CONFIG.baseRect.height
         );
