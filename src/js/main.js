@@ -8,14 +8,13 @@ App.prototype.loadImages = function () {
         images = [];
 
     this.loader = PIXI.loader;
-    this.loader.add('back', './res/1.jpg');
+    this.loader.add('back', 'res/1.jpg');
     this.loader.once('complete', function (loader, res) {
         for (var image in res){
             images[image] = new PIXI.Texture(
                 new PIXI.BaseTexture(res[image].data)
             );
         }
-        // this._textures = images;
         me.addLayers(images);
     });
     this.loader.load();
