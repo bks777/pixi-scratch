@@ -53,13 +53,13 @@ App.prototype.addLayers = function (textures) {
 App.prototype.setUserActions = function () {
     this.stage.interactive = true;
     var me = this;
-    this.stage.mousedown = function () {
+    this.stage.touchstart = this.stage.mousedown = function () {
         me.isMouseDown = true;
     };
-    this.stage.mouseup = function () {
+    this.stage.touchend = this.stage.mouseup = function () {
         me.isMouseDown = false;
     };
-    this.stage.mousemove = function(mouseData){
+    this.stage.touchmove = this.stage.mousemove = function(mouseData){
         if (!me.isMouseDown){
             return;
         }
