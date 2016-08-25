@@ -70,7 +70,7 @@ App.prototype.setUserActions = function () {
             me.getRandomNumber(-50, 50)
         );
         me.layer.texture = PIXI.Texture.fromCanvas(me.gfx.canvas);
-        me.gfx.canvas._pixiId = undefined;
+        me.gfx.canvas._pixiId = undefined; //TODO need to optimize!
     }
 };
 
