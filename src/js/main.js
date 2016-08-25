@@ -90,21 +90,11 @@ App.prototype.addLayers = function (textures) {
         upperLayer = new PIXI.Sprite(),
         columnId,
         rowId,
-        tempSprite;
-    //Adding of scratch boxes
-    for (columnId = 0; columnId < this.CONFIG.scratchArea.columns; columnId++){
-        for(rowId = 0; rowId < this.CONFIG.scratchArea.rows; rowId++){
-            tempSprite = new PIXI.Sprite(textures[this.CONFIG.scratchArea.textureName]);//Here we can take random texture
-            tempSprite.width = this.CONFIG.scratchArea.cellWidth;
-            tempSprite.height = this.CONFIG.scratchArea.cellHeight;
-            tempSprite.position = new PIXI.Point(
-                (columnId * this.CONFIG.scratchArea.cellWidth) + (columnId * this.CONFIG.scratchArea.offset),
-                (rowId *  this.CONFIG.scratchArea.cellHeight) + (rowId * this.CONFIG.scratchArea.offset)
-            );
-            backLayer.addChild(tempSprite);
-        }
-    }
+        tempSprite,
+        tempX,
+        tempY;
 
+    upperGraphics.ctx.strokeStyle = '#009900';
     upperGraphics.ctx.fillStyle = '#cccccc';
     upperGraphics.ctx.fillRect(
         0,
@@ -112,6 +102,26 @@ App.prototype.addLayers = function (textures) {
         this.CONFIG.stageDimensions.width,
         this.CONFIG.stageDimensions.height
     );
+    //Adding of scratch boxes
+    for (columnId = 0; columnId < this.CONFIG.scratchArea.columns; columnId++){
+        for(rowId = 0; rowId < this.CONFIG.scratchArea.rows; rowId++){
+            tempX =  (columnId * this.CONFIG.scratchArea.cellWidth) + (columnId * this.CONFIG.scratchArea.offset);
+            tempY = (rowId *  this.CONFIG.scratchArea.cellHeight) + (rowId * this.CONFIG.scratchArea.offset)
+            tempSprite = new PIXI.Sprite(textures[this.CONFIG.scratchArea.textureName]);//Here we can take random texture
+            tempSprite.width = this.CONFIG.scratchArea.cellWidth;
+            tempSprite.height = this.CONFIG.scratchArea.cellHeight;
+            tempSprite.position = new PIXI.Point(tempX, tempY);
+            backLayer.addChild(tempSprite);
+            //Adding a rects to upper layer
+            upperGraphics.ctx.strokeRect(
+                tempX,
+                tempY,
+                this.CONFIG.scratchArea.cellWidth,
+                this.CONFIG.scratchArea.cellHeight
+            );
+        }
+    }
+
     this.gfx = upperGraphics;
 
     upperLayer.texture = PIXI.Texture.fromCanvas(upperGraphics.canvas);
@@ -186,5 +196,5 @@ App.prototype.getRandomNumber = function(min, max){
     return Math.floor(Math.random() * (max - min)) + min;
 };
 
-//Creates an instance of scratch mechanism class
+//Creates an instance of a scratch mechanism class
 var scratch = new App();
