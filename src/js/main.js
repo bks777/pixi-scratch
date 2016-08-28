@@ -8,6 +8,10 @@ function App(){
             {
                 name: 'cell',
                 path: 'res/cell.png'
+            },
+            {
+                name: 'gift',
+                path: 'res/gift.png'
             }
         ],
         stageDimensions: {
@@ -15,8 +19,9 @@ function App(){
             height: 640
         },
         randomRect: {
-            min: -5,
-            max: 5
+            count: 10,
+            min: -25,
+            max: 35
         },
         baseRect: {
             width: 50,
@@ -28,9 +33,11 @@ function App(){
             cellWidth: 200,
             cellHeight: 200,
             offset: 20,
-            textureName: 'cell'
+            textureName: 'cell',
+            imageName: 'gift'
         }
     };
+    this.generateRandomBuffer();
     this.startRender();
     this.loadImages();
 }
@@ -53,7 +60,7 @@ App.prototype.loadImages = function () {
                 new PIXI.BaseTexture(res[image].data)
             );
         }
-        me.addLayers(images);
+        me.generateLayers(images);
     });
     this.loader.load();
 };
@@ -85,7 +92,7 @@ App.prototype.startRender = function () {
  * Adding Images to stage
  * @param textures {Object} PIXI Texture
  */
-App.prototype.addLayers = function (textures) {
+App.prototype.generateLayers = function (textures) {
     var upperGraphics = this.getCanvas(
             this.CONFIG.stageDimensions.width,
             this.CONFIG.stageDimensions.height
@@ -117,6 +124,7 @@ App.prototype.addLayers = function (textures) {
             tempSprite.position = new PIXI.Point(tempX, tempY);
             backLayer.addChild(tempSprite);
             //Adding a rects to upper layer
+            upperGraphics.ctx.drawImage(textures[this.CONFIG.scratchArea.imageName].baseTexture.source, tempX, tempY);
             upperGraphics.ctx.strokeRect(
                 tempX,
                 tempY,
@@ -130,7 +138,6 @@ App.prototype.addLayers = function (textures) {
     this.gfx = upperGraphics;
 
     upperLayer.texture = PIXI.Texture.fromCanvas(upperGraphics.canvas);
-    // upperLayer.cacheAsBitmap = true;
     this.layer = upperLayer;
 
     this.setUserActions();
@@ -144,9 +151,10 @@ App.prototype.addLayers = function (textures) {
  * Dragging logic.
  */
 App.prototype.setUserActions = function () {
-    this.stage.interactive = true;
     var me = this;
-    this.stage.touchstart = this.stage.mousedown = function (mouseData) {
+
+    this.stage.interactive = true;
+    this.stage.touchstart = this.stage.mousedown = function () {
         me.isMouseDown = true;
     };
     this.stage.touchend = this.stage.mouseup = function () {
@@ -156,9 +164,11 @@ App.prototype.setUserActions = function () {
         if (!me.isMouseDown){
             return;
         }
+        var randomBuffer = me.getRandomPositionBuffer();
+
         me.gfx.ctx.clearRect(
-            ~~((mouseData.data.global.x - me.CONFIG.baseRect.width / 2) + (3)),
-            ~~((mouseData.data.global.y - me.CONFIG.baseRect.height / 2) + (4)),
+            ~~((mouseData.data.global.x - me.CONFIG.baseRect.width / 2) + randomBuffer[0]),
+            ~~((mouseData.data.global.y - me.CONFIG.baseRect.height / 2) + randomBuffer[1]),
             me.CONFIG.baseRect.width,
             me.CONFIG.baseRect.height
         );
@@ -166,10 +176,22 @@ App.prototype.setUserActions = function () {
         }
 };
 
+/**
+ * Pre-rendering of deltas for position
+ */
 App.prototype.generateRandomBuffer = function(){
     var i = 0,
-        maxL = this;
-    // for()
+        maxL = this.CONFIG.randomRect.count,
+        buff = [],
+        tempXDelta, tempYDelta;
+
+    for(i; i < maxL; i++){
+        tempXDelta = this.getRandomNumber(this.CONFIG.randomRect.min, this.CONFIG.randomRect.max);
+        tempYDelta = this.getRandomNumber(this.CONFIG.randomRect.min, this.CONFIG.randomRect.max);
+        buff.push([tempXDelta, tempYDelta]);
+    }
+
+    this._positionBuffer = buff;
 };
 
 /**
@@ -198,6 +220,15 @@ App.prototype.getCanvas = function (width, height) {
  */
 App.prototype.getRandomNumber = function(min, max){
     return Math.floor(Math.random() * (max - min)) + min;
+};
+
+/**
+ * Getting of random position
+ * @return {Array}
+ */
+App.prototype.getRandomPositionBuffer = function () {
+    var idx = Math.floor((Math.random() * (this.CONFIG.randomRect.count - 1)) + 1);
+    return this._positionBuffer[idx];
 };
 
 /**
