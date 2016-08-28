@@ -15,12 +15,12 @@ function App(){
             height: 640
         },
         randomRect: {
-            min: -30,
-            max: 30
+            min: -5,
+            max: 5
         },
         baseRect: {
-            width: 40,
-            height: 40
+            width: 50,
+            height: 50
         },
         scratchArea: {
             columns: 3,
@@ -125,10 +125,12 @@ App.prototype.addLayers = function (textures) {
             );
         }
     }
+    backLayer.cacheAsBitmap = true;
 
     this.gfx = upperGraphics;
 
     upperLayer.texture = PIXI.Texture.fromCanvas(upperGraphics.canvas);
+    upperLayer.cacheAsBitmap = true;
     this.layer = upperLayer;
 
     this.setUserActions();
@@ -144,7 +146,7 @@ App.prototype.addLayers = function (textures) {
 App.prototype.setUserActions = function () {
     this.stage.interactive = true;
     var me = this;
-    this.stage.touchstart = this.stage.mousedown = function () {
+    this.stage.touchstart = this.stage.mousedown = function (mouseData) {
         me.isMouseDown = true;
     };
     this.stage.touchend = this.stage.mouseup = function () {
@@ -154,27 +156,23 @@ App.prototype.setUserActions = function () {
         if (!me.isMouseDown){
             return;
         }
-        //erasing of base block
         me.gfx.ctx.clearRect(
-            mouseData.data.global.x - me.CONFIG.baseRect.width / 2,
-            mouseData.data.global.y - me.CONFIG.baseRect.height / 2,
+            ~~((mouseData.data.global.x - me.CONFIG.baseRect.width / 2) + (3)),
+            ~~((mouseData.data.global.y - me.CONFIG.baseRect.height / 2) + (4)),
             me.CONFIG.baseRect.width,
             me.CONFIG.baseRect.height
         );
-        //erasing of random block
-        // me.gfx.ctx.clearRect(
-        //     mouseData.data.global.x,
-        //     mouseData.data.global.y,
-        //     me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max),
-        //     me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max)
-        // );
+        me.layer.cacheAsBitmap = false;//Experiment
         me.layer.texture.update();
+        me.layer.cacheAsBitmap = true;
     }
 };
 
-// App.prototype.generateBuffers = function(){
-//
-// };
+App.prototype.generateRandomBuffer = function(){
+    var i = 0,
+        maxL = this;
+    // for()
+};
 
 /**
  * Creating a new HTML5 Canvas
@@ -204,6 +202,10 @@ App.prototype.getRandomNumber = function(min, max){
     return Math.floor(Math.random() * (max - min)) + min;
 };
 
+/**
+ * Generates and add stats
+ * @returns {Stats}
+ */
 App.prototype.generateStats = function() {
     var stats = new Stats();
     stats.setMode(2);
