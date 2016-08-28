@@ -130,7 +130,7 @@ App.prototype.addLayers = function (textures) {
     this.gfx = upperGraphics;
 
     upperLayer.texture = PIXI.Texture.fromCanvas(upperGraphics.canvas);
-    upperLayer.cacheAsBitmap = true;
+    // upperLayer.cacheAsBitmap = true;
     this.layer = upperLayer;
 
     this.setUserActions();
