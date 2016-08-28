@@ -162,10 +162,8 @@ App.prototype.setUserActions = function () {
             me.CONFIG.baseRect.width,
             me.CONFIG.baseRect.height
         );
-        me.layer.cacheAsBitmap = false;//Experiment
         me.layer.texture.update();
-        me.layer.cacheAsBitmap = true;
-    }
+        }
 };
 
 App.prototype.generateRandomBuffer = function(){
