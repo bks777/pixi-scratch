@@ -19,8 +19,8 @@ function App(){
             max: 30
         },
         baseRect: {
-            width: 25,
-            height: 25
+            width: 40,
+            height: 40
         },
         scratchArea: {
             columns: 3,
@@ -62,17 +62,21 @@ App.prototype.loadImages = function () {
  * Creating of a ticker and starting tick
  */
 App.prototype.startRender = function () {
-    this.ticker = new PIXI.ticker.Ticker();
     var renderer = PIXI.autoDetectRenderer(
             this.CONFIG.stageDimensions.width,
             this.CONFIG.stageDimensions.height,
             {antialias: true, resolution: 1}
         ),
-        stage = new PIXI.Container();
+        stage = new PIXI.Container(),
+        stats = this.generateStats();
+
+    this.ticker = new PIXI.ticker.Ticker();
     document.getElementById('container').appendChild(renderer.view);
     this.stage = stage;
     this.ticker.add(function () {
+        stats.begin();
         renderer.render(stage);
+        stats.end();
     });
     this.ticker.start();
 };
@@ -158,15 +162,19 @@ App.prototype.setUserActions = function () {
             me.CONFIG.baseRect.height
         );
         //erasing of random block
-        me.gfx.ctx.clearRect(
-            mouseData.data.global.x,
-            mouseData.data.global.y,
-            me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max),
-            me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max)
-        );
+        // me.gfx.ctx.clearRect(
+        //     mouseData.data.global.x,
+        //     mouseData.data.global.y,
+        //     me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max),
+        //     me.getRandomNumber(me.CONFIG.randomRect.min, me.CONFIG.randomRect.max)
+        // );
         me.layer.texture.update();
     }
 };
+
+// App.prototype.generateBuffers = function(){
+//
+// };
 
 /**
  * Creating a new HTML5 Canvas
@@ -194,6 +202,14 @@ App.prototype.getCanvas = function (width, height) {
  */
 App.prototype.getRandomNumber = function(min, max){
     return Math.floor(Math.random() * (max - min)) + min;
+};
+
+App.prototype.generateStats = function() {
+    var stats = new Stats();
+    stats.setMode(2);
+    document.body.appendChild(stats.domElement);
+
+    return stats;
 };
 
 //Creates an instance of a scratch mechanism class
