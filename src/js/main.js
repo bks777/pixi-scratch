@@ -24,8 +24,26 @@ function App(){
             max: 35
         },
         baseRect: {
-            width: 50,
-            height: 50
+            width: 30,
+            height: 30,
+            xOffset: -15,
+            yOffset: -15
+        },
+        horizontalRect: {
+            width: 40,
+            height: 10,
+            xOffset: -20,
+            yOffset: -5
+        },
+        verticalRect: {
+            width: 10,
+            height: 40,
+            xOffset: -5,
+            yOffset: -20
+        },
+        ghostRect: {
+            xOffset: 10,
+            yOffset: 10
         },
         scratchArea: {
             columns: 3,
@@ -164,13 +182,43 @@ App.prototype.setUserActions = function () {
         if (!me.isMouseDown){
             return;
         }
-        var randomBuffer = me.getRandomPositionBuffer();
 
         me.gfx.ctx.clearRect(
-            ~~((mouseData.data.global.x - me.CONFIG.baseRect.width / 2) + randomBuffer[0]),
-            ~~((mouseData.data.global.y - me.CONFIG.baseRect.height / 2) + randomBuffer[1]),
+            mouseData.data.global.x + me.CONFIG.baseRect.xOffset,
+            mouseData.data.global.y + me.CONFIG.baseRect.yOffset,
             me.CONFIG.baseRect.width,
             me.CONFIG.baseRect.height
+        );
+        me.gfx.ctx.clearRect(
+            mouseData.data.global.x + me.CONFIG.horizontalRect.xOffset,
+            mouseData.data.global.y + me.CONFIG.horizontalRect.yOffset,
+            me.CONFIG.horizontalRect.width,
+            me.CONFIG.horizontalRect.height
+        );
+        me.gfx.ctx.clearRect(
+            mouseData.data.global.x + me.CONFIG.verticalRect.xOffset,
+            mouseData.data.global.y + me.CONFIG.verticalRect.yOffset,
+            me.CONFIG.verticalRect.width,
+            me.CONFIG.verticalRect.height
+        );
+        //Ghost
+        me.gfx.ctx.clearRect(
+            mouseData.data.global.x + me.CONFIG.baseRect.xOffset + me.CONFIG.ghostRect.xOffset,
+            mouseData.data.global.y + me.CONFIG.baseRect.yOffset + me.CONFIG.ghostRect.yOffset,
+            me.CONFIG.baseRect.width,
+            me.CONFIG.baseRect.height
+        );
+        me.gfx.ctx.clearRect(
+            mouseData.data.global.x + me.CONFIG.horizontalRect.xOffset + me.CONFIG.ghostRect.xOffset,
+            mouseData.data.global.y + me.CONFIG.horizontalRect.yOffset + me.CONFIG.ghostRect.yOffset,
+            me.CONFIG.horizontalRect.width,
+            me.CONFIG.horizontalRect.height
+        );
+        me.gfx.ctx.clearRect(
+            mouseData.data.global.x + me.CONFIG.verticalRect.xOffset + me.CONFIG.ghostRect.xOffset,
+            mouseData.data.global.y + me.CONFIG.verticalRect.yOffset + me.CONFIG.ghostRect.yOffset,
+            me.CONFIG.verticalRect.width,
+            me.CONFIG.verticalRect.height
         );
         me.layer.texture.update();
         }
