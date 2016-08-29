@@ -24,26 +24,26 @@ function App(){
             max: 35
         },
         baseRect: {
-            width: 30,
-            height: 30,
-            xOffset: -15,
-            yOffset: -15
+            width: 18,
+            height: 18,
+            xOffset: -9,
+            yOffset: -9
         },
         horizontalRect: {
-            width: 40,
-            height: 10,
-            xOffset: -20,
-            yOffset: -5
+            width: 24,
+            height: 6,
+            xOffset: -12,
+            yOffset: -3
         },
         verticalRect: {
-            width: 10,
-            height: 40,
-            xOffset: -5,
-            yOffset: -20
+            width: 6,
+            height: 24,
+            xOffset: -3,
+            yOffset: -12
         },
         ghostRect: {
-            xOffset: 10,
-            yOffset: 10
+            xOffset: 8,
+            yOffset: 8
         },
         scratchArea: {
             columns: 3,
